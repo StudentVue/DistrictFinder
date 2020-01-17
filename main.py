@@ -15,12 +15,11 @@ def get_schools_by_zip_code(zip_code):
     r = requests.post('https://support.edupoint.com/Service/HDInfoCommunication.asmx',
                       data=s.format(zip_code),
                       headers=headers)
-
     districts = re.findall(r'<DistrictInfo (.+)/>', html.unescape(r.text))
     return [
         {
-            k: v for (k, v) in ((prop[:prop.index('=')], prop[prop.index('=') + 2: len(prop)])
-                                for prop in re.split(r'" ', district)[:-1])
+            k: v for (k, v) in ((prop[0], prop[1])
+                                for prop in re.findall(r'([A-Za-z]+)="([^"]*)"', district))
         } for district in districts
     ]
 
