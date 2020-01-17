@@ -16,11 +16,11 @@ def get_schools_by_zip_code(zip_code):
                       data=s.format(zip_code),
                       headers=headers)
 
-    districts = re.findall(r'<DistrictInfo (.+) />', html.unescape(r.text))
+    districts = re.findall(r'<DistrictInfo (.+)/>', html.unescape(r.text))
     return [
         {
             k: v for (k, v) in ((prop[:prop.index('=')], prop[prop.index('=') + 2: len(prop)])
-                                for prop in re.split(r'" ', district))
+                                for prop in re.split(r'" ', district)[:-1])
         } for district in districts
     ]
 
